@@ -59,34 +59,34 @@ const Recovery: React.FC = () => {
   }, [formData, validateForm]);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-900 to-green-800 p-4 font-sans">
-      <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-6 sm:p-10 transition-all duration-500">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-900 to-green-800 p-2 sm:p-4 lg:p-6 font-sans">
+      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl xl:max-w-2xl bg-white shadow-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 transition-all duration-500">
         
-        <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">SportTechNews</h1>
-          <p className="text-gray-600 text-lg">Recuperação de Senha</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2">SportTechNews</h1>
+          <p className="text-gray-600 text-sm sm:text-lg">Recuperação de Senha</p>
         </div>
 
         {emailSent ? (
           <div className="text-center p-4">
-             <svg className="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+             <svg className="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h2 className="font-bold text-2xl font-semibold text-gray-800 mt-4">Verifique seu Email</h2>
-            <p className="text-gray-600 mt-2">
+            <h2 className="font-bold text-xl sm:text-2xl font-semibold text-gray-800 mt-3 sm:mt-4">Verifique seu Email</h2>
+            <p className="text-gray-600 mt-2 text-sm sm:text-base">
               Se uma conta associada a <strong>{formData.email}</strong> existir,
               enviamos um link para redefinir sua senha.
             </p>
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <Link to="/" className="font-medium text-blue-600 hover:underline transition-colors cursor-pointer">
                 Voltar para o Login
               </Link>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Email</label>
               <input
                 type="email"
                 id="email"
@@ -94,12 +94,12 @@ const Recovery: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="seunome@empresa.com.br"
-                className={`w-full h-14 px-4 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400
+                className={`w-full h-12 sm:h-14 px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-lg sm:rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400
                             focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                            transition-all duration-300 text-lg shadow-sm
+                            transition-all duration-300 text-sm sm:text-lg shadow-sm
                             ${errors.email ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
               />
-              {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
+              {errors.email && <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{errors.email}</p>}
             </div>
 
             {errors.form && (
@@ -111,14 +111,14 @@ const Recovery: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl
+              className="w-full py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg sm:rounded-xl
                          focus:outline-none focus:ring-4 focus:ring-blue-500/50
                          disabled:bg-blue-400 disabled:cursor-not-allowed
-                         transition-all duration-300 transform hover:scale-[1.02] text-lg shadow-md hover:shadow-lg cursor-pointer"
+                         transition-all duration-300 transform hover:scale-[1.02] text-sm sm:text-lg shadow-md hover:shadow-lg cursor-pointer"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-3">
-                  <div className="font-bold animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  <div className="font-bold animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-white"></div>
                   Enviando...
                 </div>
               ) : 'Enviar Link de Recuperação'}
@@ -126,8 +126,8 @@ const Recovery: React.FC = () => {
           </form>
         )}
 
-        <div className="mt-8 text-center">
-          <p className="font-bold text-gray-600 text-base">
+        <div className="mt-6 sm:mt-8 text-center">
+          <p className="font-bold text-gray-600 text-sm sm:text-base">
             Lembrou sua senha?{" "}
             <Link to="/" className="font-bold text-blue-600 hover:underline font-medium transition-colors cursor-pointer">
               Fazer Login

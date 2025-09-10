@@ -1,6 +1,19 @@
-# SportNewsTech
+# SportTechNews
 
-Uma plataforma moderna de notícias esportivas construída com React, TypeScript e Tailwind CSS.
+> Uma plataforma moderna de notícias esportivas construída com React, TypeScript e Tailwind CSS.
+
+## 📋 Índice
+
+- [🚀 Tecnologias](#-tecnologias)
+- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🎯 Funcionalidades](#-funcionalidades)
+- [👥 Tipos de Usuário](#-tipos-de-usuário)
+- [🛠️ Como Executar](#️-como-executar)
+- [📝 Dados Mockados](#-dados-mockados)
+- [🎨 Design System](#-design-system)
+- [🔧 Configuração](#-configuração)
+- [📱 Responsividade](#-responsividade)
+- [🚀 Próximos Passos](#-próximos-passos)
 
 ## 🚀 Tecnologias
 
@@ -16,14 +29,17 @@ Uma plataforma moderna de notícias esportivas construída com React, TypeScript
 src/
 ├── components/          # Componentes reutilizáveis
 │   ├── formLogin/      # Formulário de login
-│   └── formRegister/   # Formulário de cadastro
+│   ├── formRegister/   # Formulário de cadastro
+│   ├── header/         # Cabeçalho da aplicação
+│   ├── notFound/       # Página não encontrada
+│   └── recovery-password/ # Recuperação de senha
 ├── pages/              # Páginas da aplicação
 │   ├── login/          # Página de login
-│   └── register/       # Página de cadastro
+│   ├── register/       # Página de cadastro
+│   ├── recovery-password/ # Página de recuperação
+│   └── notFoundPage/   # Página 404
 ├── types/              # Definições de tipos TypeScript
 ├── hooks/              # Hooks customizados
-├── data/               # Dados mockados para desenvolvimento
-├── config/             # Configurações da aplicação
 ├── utils/              # Funções utilitárias
 ├── routes/             # Configuração de rotas
 └── assets/             # Recursos estáticos
@@ -47,9 +63,9 @@ src/
 
 ## 👥 Tipos de Usuário
 
-- **Leitor**: Acesso para ler notícias
+- **Visitante**: Acesso para ler notícias
 - **Jornalista**: Pode criar e editar notícias
-- **Admin**: Acesso completo ao sistema
+- **Editor**: Acesso completo ao sistema
 
 ## 🛠️ Como Executar
 
@@ -72,24 +88,24 @@ src/
 
 A aplicação utiliza dados simulados para desenvolvimento:
 
-- **Usuários**: 3 usuários de exemplo (leitor, jornalista, admin)
+- **Usuários**: 3 usuários de exemplo (visitante, jornalista, editor)
 - **Notícias**: 3 notícias de exemplo em diferentes categorias
 - **Serviços**: Funções mockadas para simular API
 
 ### Credenciais de Teste
 
 **Visitante:**
-- Email: `joao@email.com`
-- Senha: `123456`
+- Email: `user@example.com`
+- Senha: `password123`
 
 **Jornalista:**
-- Email: `maria@email.com`
-- Senha: `123456`
+- Email: `journalist@example.com`
+- Senha: `password123`
 - Código: `JOR001`
 
 **Editor:**
-- Email: `pedro@email.com`
-- Senha: `123456`
+- Email: `editor@example.com`
+- Senha: `password123`
 
 ## 🎨 Design System
 
@@ -126,10 +142,6 @@ VITE_MOCK_MODE=true
 4. Testes automatizados
 5. Deploy em produção
 
-## 👨‍💻 Desenvolvido por
-
-**Wesnei** - Desenvolvedor Full Stack
-
 ---
 
-*Versão 1.0.0 - Janeiro 2025*
+*Versão 1.0.0 - Setembro 2025*
