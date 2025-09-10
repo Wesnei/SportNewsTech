@@ -1,6 +1,6 @@
 # SportTechNews
 
-> Uma plataforma moderna de notícias esportivas construída com React, TypeScript e Tailwind CSS.
+Uma plataforma moderna de notícias esportivas construída com React, TypeScript e Tailwind CSS.
 
 ## 📋 Índice
 
