@@ -99,11 +99,11 @@ const LoginCard: React.FC = () => {
   const togglePassword = useCallback(() => setShowPassword(prev => !prev), []);
 
   return (
-    <div className="min-h-screen w-full flex items-start justify-center bg-white p-6 sm:p-8 pt-20 sm:pt-24 md:pt-28 font-sans">
+    <div className="h-screen overflow-y-hidden w-full flex items-start justify-center bg-white px-6 sm:px-8 pt-12 sm:pt-16 md:pt-20 font-sans">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-[#0771BA] tracking-tight font-sans">SportNewsTech</h1>
-          <p className="mt-3 text-xl font-bold text-[#0771BA] font-sans">Login</p>
+          <p className="mt-3 text-lg font-bold text-[#0771BA] font-sans">Login</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -224,7 +224,7 @@ const LoginCard: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-14 bg-[#0771BA] hover:bg-[#0663A3] text-white font-bold rounded-md
+            className="w-full h-12 bg-[#0771BA] hover:bg-[#0663A3] text-white font-bold rounded-md text-sm
                        focus:outline-none focus:ring-4 focus:ring-[#0771BA]/40 disabled:bg-blue-400 disabled:cursor-not-allowed
                        transition-colors"
           >
