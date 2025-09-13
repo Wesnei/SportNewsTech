@@ -17,7 +17,6 @@ const AppRoutes: React.FC = () => {
 
       
       {/* Rota 404 */}
-      <Route path="/notFound" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
