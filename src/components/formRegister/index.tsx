@@ -118,179 +118,198 @@ const RegisterCard: React.FC = () => {
   const toggleConfirmPassword = useCallback(() => setShowConfirmPassword(prev => !prev), []);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-900 to-green-800 p-4 font-sans">
-      <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-6 sm:p-8">
-        
+    <div className="min-h-screen w-full flex items-center justify-center bg-white px-6 sm:px-8 py-8 sm:py-12 font-sans">
+      <div className="w-full max-w-lg">
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">SportTechNews</h1>
-          <p className="font-bold text-gray-600 text-lg">Crie sua conta</p>
+          <h1 className="text-4xl font-bold text-[#0771BA] tracking-tight font-sans">SportNewsTech</h1>
+          <p className="mt-3 text-lg font-bold text-[#0771BA] font-sans">Cadastro</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div>
-            <label htmlFor="role" className="block text-sm font-bold text-gray-700 mb-2 text-left">Tipo de Usuário</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full h-14 px-4 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 text-left
-                         focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                         transition-all duration-300 text-lg shadow-sm border-gray-300 cursor-pointer"
-            >
-              <option value="Visitante">Visitante</option>
-              <option value="Jornalista">Jornalista</option>
-              <option value="Editor">Editor</option>
-            </select>
+            <label htmlFor="role" className="block text-base font-medium text-gray-700 mb-2">Qual tipo de usuário você é?</label>
+            <div className="relative">
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="w-full h-12 pl-4 pr-12 border rounded-md bg-gray-100 text-gray-900 appearance-none bg-none
+                           focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                           transition-all border-gray-200 cursor-pointer"
+              >
+                <option value="Visitante">Visitante</option>
+                <option value="Jornalista">Jornalista</option>
+                <option value="Editor">Editor</option>
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></Icon>
+              </span>
+            </div>
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2 text-left">Nome Completo</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Digite seu nome completo"
-              className={`w-full h-14 px-4 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 text-left
-                          focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                          transition-all duration-300 text-lg shadow-sm
-                          ${errors.name ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
-            />
-            {errors.name && <p className="mt-2 text-sm text-red-600 text-left">{errors.name}</p>}
+            <label htmlFor="name" className="block text-base font-medium text-gray-700 mb-2">Nome Completo</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></Icon>
+              </span>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Digite seu nome completo:"
+                className={`w-full h-12 pl-11 pr-4 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
+                            focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                            transition-all
+                            ${errors.name ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
+              />
+            </div>
+            {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name}</p>}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2 text-left">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="seunome@empresa.com.br"
-              className={`w-full h-14 px-4 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 text-left
-                          focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                          transition-all duration-300 text-lg shadow-sm
-                          ${errors.email ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
-            />
-            {errors.email && <p className="mt-2 text-sm text-red-600 text-left">{errors.email}</p>}
+            <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">Email</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></Icon>
+              </span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Digite seu email:"
+                className={`w-full h-12 pl-11 pr-4 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
+                            focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                            transition-all
+                            ${errors.email ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
+              />
+            </div>
+            {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
           </div>
 
           {formData.role === 'Jornalista' && (
             <div>
-              <label htmlFor="journalistId" className="block text-sm font-bold text-gray-700 mb-2 text-left">Código de Jornalista</label>
-              <input
-                type="text"
-                id="journalistId"
-                name="journalistId"
-                value={formData.journalistId}
-                onChange={handleChange}
-                placeholder="Digite seu código de jornalista"
-                className={`w-full h-14 px-4 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 text-left
-                            focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                            transition-all duration-300 text-lg shadow-sm
-                            ${errors.journalistId ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
-              />
-              {errors.journalistId && <p className="mt-2 text-sm text-red-600 text-left">{errors.journalistId}</p>}
+              <label htmlFor="journalistId" className="block text-base font-medium text-gray-700 mb-2">Código:</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
+                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h11" /></Icon>
+                </span>
+                <input
+                  type="text"
+                  id="journalistId"
+                  name="journalistId"
+                  value={formData.journalistId}
+                  onChange={handleChange}
+                  placeholder="Digite seu código:"
+                  className={`w-full h-12 pl-11 pr-4 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
+                              focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                              transition-all
+                              ${errors.journalistId ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
+                />
+              </div>
+              {errors.journalistId && <p className="mt-2 text-sm text-red-600">{errors.journalistId}</p>}
             </div>
           )}
 
           <div>
-            <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-2 text-left">Senha</label>
+            <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-2">Senha</label>
             <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.5304 0 1.039-.21 1.414-.586A2 2 0 0014 9a2 2 0 00-3.414-1.414A2 2 0 0010 9c0 .53.21 1.039.586 1.414.375.376.884.586 1.414.586zm6-3V7a4 4 0 10-8 0v1H6a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2v-7a2 2 0 00-2-2h-2z" /></Icon>
+              </span>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full h-14 px-4 pr-12 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 text-left
-                            focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                            transition-all duration-300 text-lg shadow-sm
-                            ${errors.password ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
+                placeholder="Digite sua senha:"
+                className={`w-full h-12 pl-11 pr-12 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
+                            focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                            transition-all
+                            ${errors.password ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
               />
               <button
                 type="button"
                 onClick={togglePassword}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 transition-colors duration-300 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
                 aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
               >
                 {showPassword ? (
-                  <Icon className="h-6 w-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                  </Icon>
+                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" /></Icon>
                 ) : (
-                  <Icon className="h-6 w-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </Icon>
+                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></Icon>
                 )}
               </button>
             </div>
-            {errors.password && <p className="mt-2 text-sm text-red-600 text-left">{errors.password}</p>}
+            {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-bold text-gray-700 mb-2 text-left">Confirmar Senha</label>
+            <label htmlFor="confirmPassword" className="block text-base font-medium text-gray-700 mb-2">Confirmar Senha</label>
             <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.5304 0 1.039-.21 1.414-.586A2 2 0 0014 9a2 2 0 00-3.414-1.414A2 2 0 0010 9c0 .53.21 1.039.586 1.414.375.376.884.586 1.414.586zm6-3V7a4 4 0 10-8 0v1H6a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2v-7a2 2 0 00-2-2h-2z" /></Icon>
+              </span>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full h-14 px-4 pr-12 py-3 border-2 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 text-left
-                            focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                            transition-all duration-300 text-lg shadow-sm
-                            ${errors.confirmPassword ? 'border-red-500 focus:ring-red-400' : 'border-gray-300'}`}
+                placeholder="Confirme sua senha:"
+                className={`w-full h-12 pl-11 pr-12 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
+                            focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
+                            transition-all
+                            ${errors.confirmPassword ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
               />
               <button
                 type="button"
                 onClick={toggleConfirmPassword}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 transition-colors duration-300 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
                 aria-label={showConfirmPassword ? "Esconder senha" : "Mostrar senha"}
               >
                 {showConfirmPassword ? (
-                  <Icon className="h-6 w-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                  </Icon>
+                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" /></Icon>
                 ) : (
-                  <Icon className="h-6 w-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </Icon>
+                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></Icon>
                 )}
               </button>
             </div>
-            {errors.confirmPassword && <p className="mt-2 text-sm text-red-600 text-left">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>}
           </div>
+
+          {errors.form && (
+            <div className="text-sm text-red-600 text-center font-semibold bg-red-100 p-3 rounded-md">
+              {errors.form}
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl
-                       focus:outline-none focus:ring-4 focus:ring-blue-500/50
-                       disabled:bg-blue-400 disabled:cursor-not-allowed
-                       transition-all duration-300 transform hover:scale-[1.02] text-lg shadow-md hover:shadow-lg cursor-pointer"
+            className="w-full h-12 bg-[#0771BA] hover:bg-[#0663A3] text-white font-bold rounded-md text-sm
+                       focus:outline-none focus:ring-4 focus:ring-[#0771BA]/40 disabled:bg-blue-400 disabled:cursor-not-allowed
+                       transition-colors"
           >
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                  Criando conta...
-                </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-3">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Criando conta...
+              </div>
             ) : 'Criar Conta'}
-            </button>
+          </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="font-bold text-gray-600 text-base">
+        <div className="mt-8 text-center">
+          <p className="text-sm font-semibold text-gray-600">
             Já tem uma conta?{" "}
-            <Link to="/" className="text-blue-600 hover:underline font-medium transition-colors cursor-pointer">
-              Faça login
-            </Link>
+            <Link to="/" className="text-[#0771BA] hover:underline font-semibold cursor-pointer">Faça login</Link>
           </p>
         </div>
       </div>
