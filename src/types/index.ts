@@ -53,6 +53,25 @@ export interface NewsArticle {
   likes: number;
 }
 
+export interface ArticleFormData {
+  title: string;
+  subtitle: string;
+  content: string;
+  coverImage: string;
+  categoryId: string;
+  tags: string[];
+}
+
+export interface ArticleFormErrors {
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  coverImage?: string;
+  categoryId?: string;
+  tags?: string;
+  form?: string;
+}
+
 export type NewsCategory = 'futebol' | 'basquete' | 'tenis' | 'natacao' | 'atletismo' | 'outros';
 
 export interface AuthContextType {
