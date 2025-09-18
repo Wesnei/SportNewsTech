@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import type { LoginFormData as LoginCredentials } from '../../types';
 
 
-interface LoginFormData {
+interface LocalLoginFormData {
   email: string;
   password: string;
 }
@@ -16,11 +17,11 @@ interface IconProps {
 const useFormValidation = (rules: Record<string, { custom: (value: string) => string | undefined }>) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   
-  const validateForm = (formData: LoginFormData): boolean => {
+  const validateForm = (formData: LocalLoginFormData): boolean => {
     const newErrors: Record<string, string> = {};
     for (const key in rules) {
       const rule = rules[key];
-      const value = formData[key as keyof LoginFormData];
+      const value = formData[key as keyof LocalLoginFormData];
       
       if (typeof value === 'string') {
         const error = rule.custom(value);
@@ -76,8 +77,8 @@ const Notification: React.FC<{ message: string; type: 'success' | 'error' }> = (
 };
 
 const LoginCard: React.FC = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<LoginFormData>({ 
+  const { login } = useAuth();
+  const [formData, setFormData] = useState<LocalLoginFormData>({ 
     email: '', password: ''
   });
   
@@ -94,7 +95,7 @@ const LoginCard: React.FC = () => {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev: LocalLoginFormData) => ({ ...prev, [name]: value }));
     clearError(name);
     if (notification) setNotification(null);
   }, [clearError, notification]);
@@ -107,33 +108,23 @@ const LoginCard: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const payload = {
+      // Create credentials with default role since role selection is removed
+      const credentials: LoginCredentials = {
         email: formData.email,
         password: formData.password,
+        role: 'Visitante' // Default role, will be overridden by API response
       };
 
-      console.log('Enviando requisição para:', api.getUri() + '/auth/login', 'com payload:', payload);
-      const response = await api.post('/auth/login', payload);
-      console.log('Resposta da API:', response.data);
-
-      const { user: { id }, token } = response.data;
-
-      localStorage.setItem('currentUserId', id);
-      localStorage.setItem('authToken', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+      await login(credentials);
       setNotification({ message: 'Login bem-sucedido! Redirecionando...', type: 'success' });
-      setTimeout(() => navigate('/home'), 1200);
     } catch (error: any) {
       console.error('Erro completo:', error);
-      console.error('Resposta do servidor:', error.response?.data);
-      console.error('Status HTTP:', error.response?.status);
       const errorMessage = error.response?.data?.message || 'Erro ao conectar com o servidor. Verifique a conexão ou tente novamente.';
       setNotification({ message: errorMessage, type: 'error' });
     } finally {
       setIsLoading(false);
     }
-  }, [formData, validateForm, navigate]);
+  }, [formData, validateForm, login]);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-200 p-4 font-sans">

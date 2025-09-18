@@ -104,9 +104,9 @@ const StandingsSidebar = () => {
 
   return (
     <aside className="bg-white border">
-      <div className="p-3 border-b">
-        <h3 className="text-sm font-bold text-gray-800">ELIMINATÓRIAS DA COPA</h3>
-        <p className="text-xs text-gray-500">América do Sul</p>
+      <div className="p-3 border-b bg-green-600">
+        <h3 className="text-sm font-bold text-white">ELIMINATÓRIAS DA COPA</h3>
+        <p className="text-xs text-green-100">América do Sul</p>
       </div>
       
       <div className="flex justify-between px-3 py-2 text-xs font-bold text-gray-500 bg-gray-50 border-b">
@@ -144,6 +144,12 @@ const StandingsSidebar = () => {
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className="p-3 border-t bg-gray-50">
+        <a href="#" className="text-sm text-blue-600 hover:text-blue-800 font-semibold">
+          Ver tabela completa
+        </a>
       </div>
     </aside>
   );

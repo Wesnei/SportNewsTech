@@ -119,7 +119,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
             <button
               onClick={logout}
-              className="mt-3 flex items-center px-3 py-2 text-sm text-blue-100 hover:text-white hover:bg-blue-600 rounded-lg transition-colors w-full"
+              className="mt-3 flex items-center px-3 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors w-full cursor-pointer font-semibold"
             >
               <Icon className="h-4 w-4 mr-2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H3" />

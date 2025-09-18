@@ -19,7 +19,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         try {
           const response = await api.get(`/auth/me`); 
-          setUser(response.data); 
+          const userData = response.data;
+          // Ensure user has a role property
+          if (userData && !userData.role) {
+            userData.role = 'Visitante'; // Default role if none provided
+          }
+          setUser(userData); 
           setIsAuthenticated(true);
         } catch (error) {
           console.error("Failed to load user or verify token:", error);
@@ -41,11 +46,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await api.post('/auth/login', credentials);
       const { user: userData, token } = response.data;
 
+      console.log('=== LOGIN DEBUG ===');
+      console.log('Full API response:', response.data);
+      console.log('User data:', userData);
+      console.log('User role from API:', userData.role);
+      console.log('User role type:', typeof userData.role);
+
       localStorage.setItem('authToken', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
       setIsAuthenticated(true);
-      navigate('/home');
+      
+      // Role-based navigation - redirect to appropriate dashboard
+      const userRole = userData.role?.toString()?.toUpperCase();
+      console.log('Processed role (uppercase):', userRole);
+      
+      // Journalists and Editors go to /journalist dashboard
+      const professionalRoles = ['JOURNALIST', 'JORNALISTA', 'EDITOR'];
+      if (professionalRoles.includes(userRole)) {
+        console.log('🚀 LOGIN SUCCESS: Redirecting to /journalist for role:', userRole);
+        navigate('/journalist', { replace: true });
+      } else {
+        console.log('🏠 LOGIN SUCCESS: Redirecting to home page for visitor role:', userRole);
+        navigate('/', { replace: true });
+      }
     } catch (error) {
       console.error('Erro de login:', error);
       throw error; 
@@ -74,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
     setIsAuthenticated(false);
-    navigate('/'); 
+    navigate('/'); // Go to public home page after logout
   }, [navigate]);
 
   return (

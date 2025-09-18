@@ -11,15 +11,15 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-10 lg:gap-12">
           
-          {/* IMAGEM ESQUERDA */}
+          {/* IMAGEM ESQUERDA (AJUSTADA) */}
           <div
             className="lg:col-span-3 relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer
-                       aspect-[16/9] md:aspect-auto md:h-[650px] lg:h-[700px]"
+                       h-[550px] md:h-[650px] lg:h-[700px]" // Ajuste de altura
           >
             <img
               src={imgEsquerda}
               alt="Jogador em ação"
-              className="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-110"
+              className="w-full h-full object-cover object-top md:object-center transition-all duration-500 group-hover:scale-110" // Ajuste de foco da imagem
               loading="eager"
               style={{ imageRendering: "crisp-edges" }}
             />
@@ -129,7 +129,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* COLUNA DIREITA */}
+          {/* COLUNA DIREITA (sem alterações) */}
           <div className="lg:col-span-2 grid grid-rows-2 gap-6 md:gap-8">
             {/* Card topo direita */}
             <div className="relative rounded-2xl overflow-hidden shadow-xl group cursor-pointer transform hover:scale-[1.02] transition-all duration-300">

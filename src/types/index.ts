@@ -4,7 +4,6 @@ export interface User {
   email: string;
   password: string;
   role: UserRole;
-  journalistId?: string;
   name: string;
   username?: string;
   createdAt: Date;
@@ -17,7 +16,6 @@ export interface LoginFormData {
   email: string;
   password: string;
   role: UserRole;
-  journalistId?: string;
 }
 
 export interface RegisterFormData {
@@ -26,7 +24,6 @@ export interface RegisterFormData {
   password: string;
   confirmPassword: string;
   role: UserRole;
-  journalistId?: string;
 }
 
 export interface FormErrors {
@@ -34,7 +31,6 @@ export interface FormErrors {
   password?: string;
   name?: string;
   confirmPassword?: string;
-  journalistId?: string;
   form?: string;
 }
 

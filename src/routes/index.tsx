@@ -9,27 +9,29 @@ import PrivateRoute from './PrivateRoute';
 import ArticleDetailPage from '../pages/articleDetail';
 import RecoveryCard from '../pages/recovery-password';
 import ResetCard from '../pages/reset-password';
+import NotFound from '../pages/notFoundPage';
 
 const AppRoutes: React.FC = () => {
   return (
     
       <Routes>
-        {/* Rotas Públicas*/}
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
+        {/* Rotas Públicas - Visitantes podem acessar sem autenticação */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} /> {/* Redirecionamento para compatibilidade */}
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/articles/detail/:slug" element={<ArticleDetailPage />} />
         <Route path="/recovery-password" element={<RecoveryCard />} />
-        <Route path="/recovery-password" element={<ResetCard />} />
+        <Route path="/reset-password" element={<ResetCard />} />
+        <Route path="/articles/detail/:slug" element={<ArticleDetailPage />} />
 
-        {/* Rotas Protegidas (Jornalista/Editor) */}
+        {/* Rotas Protegidas para Jornalistas e Editores */}
         <Route element={<PrivateRoute allowedRoles={['JOURNALIST', 'EDITOR']} />}>
           <Route path="/journalist" element={<JournalistPage />} />
           <Route path="/journalist/articles" element={<MyArticlesPage />} />
         </Route>
 
         {/* Rota 404 */}
-        <Route path="*" element={<h1>404: Not Found</h1>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     
   );
