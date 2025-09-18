@@ -9,7 +9,9 @@ const HomePage = () => {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Feed />
+        <div className="max-w-screen-xl mx-auto p-4 lg:p-8">
+          <Feed />
+        </div>
       </main>
       <Footer />
     </div>

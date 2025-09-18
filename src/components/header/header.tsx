@@ -1,9 +1,46 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { getCategories } from '../../services/articleService';
+import type { Category } from '../../types';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
+  const [errorCategories, setErrorCategories] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        const response = await getCategories();
+        setCategories(response.categories || []);
+      } catch (err) {
+        console.error("Erro ao buscar categorias:", err);
+        setErrorCategories("Não foi possível carregar as categorias.");
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = (categoryId?: string) => {
+    const searchParams = new URLSearchParams(location.search);
+    if (categoryId) {
+      searchParams.set('categoryId', categoryId);
+    } else {
+      searchParams.delete('categoryId');
+    }
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
@@ -34,6 +71,10 @@ const Header = () => {
       {
         acceptNode: (node) => {
           const parent = node.parentElement;
+<<<<<<< HEAD
+=======
+          
+>>>>>>> 08bec80675c4da8ba5d642eea8e9afd29801bc37
           if (!parent || 
               parent.closest('input') || 
               parent.closest('textarea') || 
@@ -169,16 +210,22 @@ const Header = () => {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
           <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 py-3 sm:py-4 min-w-max">
-            {["Natação", "Futebol", "Vôlei", "Basquete", "Tênis", "Corrida"].map(
-              (item) => (
-                <Link
-                  key={item}
-                  to={`/${item.toLowerCase()}`}
-                  className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 px-3 sm:px-4 md:px-5 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer whitespace-nowrap flex-shrink-0 border-b-2 border-transparent hover:border-blue-500"
-                >
-                  {item}
-                </Link>
-              )
+            {loadingCategories ? (
+              <span className="text-gray-500">Carregando categorias...</span>
+            ) : errorCategories ? (
+              <span className="text-red-600">{errorCategories}</span>
+            ) : (
+              <>
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-300 px-3 sm:px-4 md:px-5 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer whitespace-nowrap flex-shrink-0 border-b-2 border-transparent hover:border-blue-500"
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </>
             )}
             
             <Link
