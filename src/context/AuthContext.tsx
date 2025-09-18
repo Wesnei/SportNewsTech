@@ -62,11 +62,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userData);
       setIsAuthenticated(true);
       
-      // Role-based navigation - redirect to appropriate dashboard
       const userRole = userData.role?.toString()?.toUpperCase();
       console.log('Processed role (uppercase):', userRole);
       
-      // Journalists and Editors go to /journalist dashboard
       const professionalRoles = ['JOURNALIST', 'JORNALISTA', 'EDITOR'];
       if (professionalRoles.includes(userRole)) {
         console.log('🚀 LOGIN SUCCESS: Redirecting to /journalist for role:', userRole);
@@ -103,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
     setIsAuthenticated(false);
-    navigate('/'); // Go to public home page after logout
+    navigate('/');
   }, [navigate]);
 
   return (

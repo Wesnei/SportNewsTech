@@ -17,49 +17,77 @@ Uma plataforma moderna de notícias esportivas construída com React, TypeScript
 
 ## 🚀 Tecnologias
 
-- **React 18** - Biblioteca para interfaces de usuário
+- **React 19** - Biblioteca para interfaces de usuário
 - **TypeScript** - Tipagem estática para JavaScript
-- **Tailwind CSS** - Framework CSS utilitário
-- **React Router** - Roteamento para aplicações React
+- **Tailwind CSS 4** - Framework CSS utilitário
+- **React Router DOM** - Roteamento para aplicações React
 - **Vite** - Build tool e servidor de desenvolvimento
+- **Framer Motion** - Biblioteca de animações
+- **Axios** - Cliente HTTP para requisições
+- **JWT Decode** - Decodificação de tokens JWT
+- **Lucide React** - Ícones para React
 
 ## 📁 Estrutura do Projeto
 
 ```
 src/
 ├── components/          # Componentes reutilizáveis
+│   ├── editArticleModal/ # Modal para edição de artigos
+│   ├── feed/           # Feed de notícias
+│   ├── footer/         # Rodapé da aplicação
 │   ├── formLogin/      # Formulário de login
 │   ├── formRegister/   # Formulário de cadastro
 │   ├── header/         # Cabeçalho da aplicação
-│   ├── notFound/       # Página não encontrada
-│   └── recovery-password/ # Recuperação de senha
+│   ├── hero/           # Seção hero da homepage
+│   ├── notFound/       # Componente página não encontrada
+│   ├── recovery-password/ # Recuperação de senha
+│   ├── reset-password/ # Reset de senha
+│   └── sidebar/        # Barra lateral
 ├── pages/              # Páginas da aplicação
+│   ├── articleDetail/  # Página de detalhes do artigo
+│   ├── home/           # Página inicial
+│   ├── journalist/     # Área do jornalista
+│   │   └── articles/   # Gestão de artigos
 │   ├── login/          # Página de login
 │   ├── register/       # Página de cadastro
 │   ├── recovery-password/ # Página de recuperação
+│   ├── reset-password/ # Página de reset de senha
 │   └── notFoundPage/   # Página 404
-├── types/              # Definições de tipos TypeScript
+├── context/            # Contextos React (AuthContext)
 ├── hooks/              # Hooks customizados
-├── utils/              # Funções utilitárias
+│   ├── useFormValidation.ts # Validação de formulários
+│   └── useArticleValidation.ts # Validação de artigos
 ├── routes/             # Configuração de rotas
+│   ├── index.tsx       # Configuração principal de rotas
+│   └── PrivateRoute.tsx # Rotas protegidas
+├── services/           # Serviços e APIs
+│   ├── api.tsx         # Configuração da API
+│   └── articleService.ts # Serviços de artigos
+├── types/              # Definições de tipos TypeScript
+├── utils/              # Funções utilitárias
 └── assets/             # Recursos estáticos
 ```
 
 ## 🎯 Funcionalidades
 
 ### ✅ Implementadas
-- **Autenticação**: Login e cadastro de usuários
+- **Autenticação**: Login e cadastro com Context API
+- **Sistema de Artigos**: CRUD completo de notícias
+- **Área do Jornalista**: Dashboard para criação/edição de artigos
 - **Tipagem**: TypeScript com interfaces bem definidas
-- **Validação**: Validação de formulários com feedback visual
+- **Validação**: Validação de formulários e artigos com feedback visual
 - **Responsividade**: Design responsivo para todos os dispositivos
+- **Roteamento Protegido**: Rotas privadas baseadas em autenticação
+- **Feed de Notícias**: Exibição de artigos na homepage
+- **Categorização**: Sistema de categorias e tags para artigos
 - **Mock Data**: Dados simulados para desenvolvimento
-- **Roteamento**: Navegação entre páginas
 
 ### 🔄 Em Desenvolvimento
-- Dashboard do usuário
-- Sistema de notícias
-- Perfil do usuário
 - Integração com API real
+- Sistema de comentários
+- Busca avançada de artigos
+- Perfil detalhado do usuário
+- Sistema de notificações
 
 ## 👥 Tipos de Usuário
 
@@ -97,15 +125,17 @@ A aplicação utiliza dados simulados para desenvolvimento:
 **Visitante:**
 - Email: `user@example.com`
 - Senha: `password123`
+- Acesso: Leitura de artigos
 
 **Jornalista:**
 - Email: `journalist@example.com`
 - Senha: `password123`
-- Código: `JOR001`
+- Acesso: Criação e edição de artigos
 
 **Editor:**
 - Email: `editor@example.com`
 - Senha: `password123`
+- Acesso: Gestão completa do sistema
 
 ## 🎨 Design System
 
@@ -118,7 +148,7 @@ A aplicação utiliza dados simulados para desenvolvimento:
 
 ### Variáveis de Ambiente
 ```env
-VITE_APP_NAME=SportNewsTech
+VITE_APP_NAME=SportTechNews
 VITE_API_URL=http://localhost:3000/api
 VITE_MOCK_MODE=true
 ```
@@ -136,11 +166,14 @@ VITE_MOCK_MODE=true
 
 ## 🚀 Próximos Passos
 
-1. Implementar dashboard
-2. Sistema de notícias completo
-3. Integração com API real
-4. Testes automatizados
-5. Deploy em produção
+1. **Backend Integration**: Conectar com API real
+2. **Advanced Features**: Sistema de comentários e reações
+3. **Search & Filter**: Busca avançada com filtros
+4. **User Profiles**: Perfis detalhados de usuários
+5. **Real-time**: Notificações em tempo real
+6. **Testing**: Testes automatizados (Jest/Testing Library)
+7. **Performance**: Otimizações e lazy loading
+8. **Deploy**: CI/CD e deploy em produção
 
 ---
 

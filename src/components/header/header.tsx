@@ -9,7 +9,6 @@ const Header = () => {
     const term = e.target.value;
     setSearchTerm(term);
     
-    // Remove existing highlights first
     clearHighlights();
     
     if (term.trim() && term.length >= 2) {
@@ -35,7 +34,6 @@ const Header = () => {
       {
         acceptNode: (node) => {
           const parent = node.parentElement;
-          // Skip input fields, scripts, styles, and already highlighted content
           if (!parent || 
               parent.closest('input') || 
               parent.closest('textarea') || 
@@ -183,7 +181,6 @@ const Header = () => {
               )
             )}
             
-            {/* Authentication Links - Always show Login and Register */}
             <Link
               to="/login"
               className="group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl transform hover:scale-105 border border-blue-400 hover:border-blue-500 flex items-center gap-2 whitespace-nowrap"

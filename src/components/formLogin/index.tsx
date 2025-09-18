@@ -108,11 +108,10 @@ const LoginCard: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Create credentials with default role since role selection is removed
       const credentials: LoginCredentials = {
         email: formData.email,
         password: formData.password,
-        role: 'Visitante' // Default role, will be overridden by API response
+        role: 'Visitante' 
       };
 
       await login(credentials);

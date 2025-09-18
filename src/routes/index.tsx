@@ -17,7 +17,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         {/* Rotas Públicas - Visitantes podem acessar sem autenticação */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/home" element={<HomePage />} /> {/* Redirecionamento para compatibilidade */}
+        <Route path="/home" element={<HomePage />} /> 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/recovery-password" element={<RecoveryCard />} />

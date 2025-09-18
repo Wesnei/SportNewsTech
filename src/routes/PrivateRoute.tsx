@@ -24,12 +24,10 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // If no specific roles are required, allow any authenticated user
   if (!allowedRoles || allowedRoles.length === 0) {
     return <Outlet />;
   }
 
-  // Check if user has required role - handle all possible role formats
   console.log('=== PRIVATE ROUTE DEBUG ===');
   console.log('isAuthenticated:', isAuthenticated);
   console.log('user:', user);
@@ -52,11 +50,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
     return <Outlet />;
   }
 
-  // Redirect based on user role if they don't have access or if role is undefined
   console.log('PrivateRoute: Access denied, redirecting. User role:', userRole);
   let redirectPath = '/journalist';
   
-  // Apenas redireciona para o login se o usuário não estiver autenticado e não tiver um papel
   if (userRole === 'UNKNOWN' && !isAuthenticated) {
     redirectPath = '/login';
   }

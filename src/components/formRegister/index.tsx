@@ -18,7 +18,7 @@ const RegisterCard: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'Jornalista' // Default to journalist since visitors don't need to register
+    role: 'Jornalista' 
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -82,7 +82,6 @@ const RegisterCard: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Create a unique username from email (part before @)
       const emailPrefix = formData.email.split('@')[0];
       const uniqueUsername = `${emailPrefix}_${Date.now()}`;
       
@@ -91,19 +90,18 @@ const RegisterCard: React.FC = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role === 'Jornalista' ? 'JOURNALIST' : 
-        formData.role === 'Editor' ? 'EDITOR' : 'JOURNALIST' // Default to journalist
+        formData.role === 'Editor' ? 'EDITOR' : 'JOURNALIST' 
       });
 
       console.log('Cadastro bem-sucedido:', response.data);
 
-      // Role-based navigation after registration
       const userRole = formData.role.toLowerCase();
       switch (userRole) {
         case 'jornalista':
-          navigate('/login'); // Journalists go to login page then to /journalist
+          navigate('/login'); 
           break;
         case 'editor':
-          navigate('/login'); // Editors go to login page then to /journalist
+          navigate('/login'); 
           break;
         default:
           navigate('/login');
@@ -125,7 +123,6 @@ const RegisterCard: React.FC = () => {
         }
       }
       
-      // You can add state to show this error to the user
       alert(errorMessage);
       
       if (error.response) {

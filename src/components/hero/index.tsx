@@ -11,15 +11,13 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-10 lg:gap-12">
           
-          {/* IMAGEM ESQUERDA (AJUSTADA) */}
           <div
-            className="lg:col-span-3 relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer
-                       h-[550px] md:h-[650px] lg:h-[700px]" // Ajuste de altura
+            className="lg:col-span-3 relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointerh-[550px] md:h-[650px] lg:h-[700px]" 
           >
             <img
               src={imgEsquerda}
               alt="Jogador em ação"
-              className="w-full h-full object-cover object-top md:object-center transition-all duration-500 group-hover:scale-110" // Ajuste de foco da imagem
+              className="w-full h-full object-cover object-top md:object-center transition-all duration-500 group-hover:scale-110"
               loading="eager"
               style={{ imageRendering: "crisp-edges" }}
             />
