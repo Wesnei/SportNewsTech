@@ -54,17 +54,11 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
 
   // Redirect based on user role if they don't have access or if role is undefined
   console.log('PrivateRoute: Access denied, redirecting. User role:', userRole);
-  let redirectPath = '/';
+  let redirectPath = '/journalist';
   
-  switch (userRole) {
-    case 'JOURNALIST': // Journalists
-    case 'JORNALISTA': // Portuguese variant
-    case 'EDITOR': // Editors
-      redirectPath = '/journalist';
-      break;
-    default:
-      redirectPath = '/'; // Everyone else goes to public home
-      break;
+  // Apenas redireciona para o login se o usuário não estiver autenticado e não tiver um papel
+  if (userRole === 'UNKNOWN' && !isAuthenticated) {
+    redirectPath = '/login';
   }
 
   console.log('PrivateRoute: Final redirect path:', redirectPath);

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import api from '../services/api';
 import type { User, LoginFormData, RegisterFormData, AuthContextType } from '../types';
 
@@ -44,7 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const response = await api.post('/auth/login', credentials);
-      const { user: userData, token } = response.data;
+      let { user: userData, token } = response.data;
+
+      // Decodificar o token para extrair o papel (role)
+      const decodedToken: { role: string } = jwtDecode(token);
+      userData = { ...userData, role: decodedToken.role };
 
       console.log('=== LOGIN DEBUG ===');
       console.log('Full API response:', response.data);
@@ -68,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         navigate('/journalist', { replace: true });
       } else {
         console.log('🏠 LOGIN SUCCESS: Redirecting to home page for visitor role:', userRole);
-        navigate('/', { replace: true });
+        navigate('/journalist', { replace: true });
       }
     } catch (error) {
       console.error('Erro de login:', error);
