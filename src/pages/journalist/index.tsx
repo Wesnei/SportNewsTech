@@ -1,7 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import type { ArticleFormData, IconProps } from '../../types';
 import { useArticleValidation } from '../../hooks/useArticleValidation';
 import Sidebar from '../../components/sidebar';
+import { createArticle } from '../../services/articleService';
+import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -10,6 +14,7 @@ const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
 );
 
 const JournalistPage: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<ArticleFormData>({
     title: '',
     subtitle: '',
@@ -21,15 +26,20 @@ const JournalistPage: React.FC = () => {
   const [tagInput, setTagInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const { user } = useAuth();
 
-  const categories: { value: string; label: string }[] = [
-    { value: 'futebol', label: 'Futebol' },
-    { value: 'basquete', label: 'Basquete' },
-    { value: 'tenis', label: 'Tênis' },
-    { value: 'natacao', label: 'Natação' },
-    { value: 'atletismo', label: 'Atletismo' },
-    { value: 'outros', label: 'Outros' }
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/categories');
+        setCategories(response.data.map((cat: any) => ({ value: cat.id, label: cat.name })));
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const validationRules = {
     title: {
@@ -110,13 +120,6 @@ const JournalistPage: React.FC = () => {
     }
   }, [handleTagAdd]);
 
-  const mockArticleService = {
-    createArticle: async (data: ArticleFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      return { ...data, id: Math.random().toString(36).substr(2, 9) };
-    }
-  };
-
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -130,10 +133,14 @@ const JournalistPage: React.FC = () => {
     
     setIsLoading(true);
     try {
-      const article = await mockArticleService.createArticle(formData);
-      console.log('Artigo criado com sucesso:', article);
+      if (!user?.id) {
+        console.error("ID do usuário não disponível. O usuário pode não estar autenticado.");
+        setIsLoading(false);
+        return;
+      }
+      await createArticle({ ...formData, authorId: user.id });
+      console.log('Artigo criado com sucesso:', formData.title);
       
-      // Reset form
       setFormData({
         title: '',
         subtitle: '',
@@ -143,13 +150,15 @@ const JournalistPage: React.FC = () => {
         tags: []
       });
       setTagInput('');
+
+      navigate('/journalist/articles');
       
     } catch (error) {
-      console.error('Erro ao criar artigo:', error);
+      console.error('Erro ao salvar artigo:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [formData, validateForm]);
+  }, [formData, validateForm, user?.id, navigate]);
 
   return (
     <div className="flex h-screen bg-gray-100">

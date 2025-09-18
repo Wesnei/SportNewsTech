@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import type { IconProps } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 
 const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -15,6 +16,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     {
@@ -38,9 +40,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   ];
 
   const isActive = (href: string) => {
-    if (href === '/journalist' && location.pathname === '/journalist') return true;
-    if (href !== '/journalist' && location.pathname.startsWith(href)) return true;
-    return false;
+    if (href === '/journalist') {
+      return location.pathname === '/journalist';
+    }
+    return location.pathname.startsWith(href);
   };
 
   return (
@@ -90,7 +93,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   }
                 `}
                 onClick={() => {
-                  // Fechar sidebar no mobile após clicar em um item
                   if (window.innerWidth < 1024) {
                     onClose();
                   }
@@ -111,19 +113,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </Icon>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">Jornalista</p>
-                <p className="text-xs text-blue-100 truncate">jornalista@sportnewstech.com</p>
+                <p className="text-sm font-medium text-white truncate">{user?.username || user?.name || 'Usuário'}</p>
+                <p className="text-xs text-blue-100 truncate">{user?.email || 'email@exemplo.com'}</p>
               </div>
             </div>
-            <Link
-              to="/"
-              className="mt-3 flex items-center px-3 py-2 text-sm text-blue-100 hover:text-white hover:bg-blue-600 rounded-lg transition-colors"
+            <button
+              onClick={logout}
+              className="mt-3 flex items-center px-3 py-2 text-sm text-blue-100 hover:text-white hover:bg-blue-600 rounded-lg transition-colors w-full"
             >
               <Icon className="h-4 w-4 mr-2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H3" />
               </Icon>
               Sair
-            </Link>
+            </button>
           </div>
         </div>
       </div>
