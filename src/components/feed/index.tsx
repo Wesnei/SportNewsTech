@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getArticles } from '../../services/articleService';
 import type { Article } from '../../types';
 
@@ -116,12 +117,14 @@ const NewsPageReplication: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+  const categoryId = new URLSearchParams(location.search).get('categoryId') || undefined;
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         setLoading(true);
-        const response = await getArticles();
+        const response = await getArticles({ categoryId });
         setArticles(response.articles);
       } catch (err) {
         console.error("Erro ao buscar artigos:", err);
@@ -132,7 +135,7 @@ const NewsPageReplication: React.FC = () => {
     };
 
     fetchArticles();
-  }, []);
+  }, [categoryId, location.search]);
 
   if (loading) {
     return (

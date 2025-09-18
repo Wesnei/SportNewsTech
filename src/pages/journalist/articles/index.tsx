@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import type { IconProps, Article} from '../../../types';
+import type { IconProps, Article, Category} from '../../../types';
 import Sidebar from '../../../components/sidebar';
-import { getArticles, deleteArticle } from '../../../services/articleService';
+import { getArticles, deleteArticle, getCategories } from '../../../services/articleService';
 import { useAuth } from '../../../context/AuthContext';
-import api from '../../../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import EditArticleModal from '../../../components/editArticleModal';
 
 const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
@@ -15,21 +14,23 @@ const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
 
 const MyArticlesPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [articles, setArticles] = useState<Article[]>([]);
-  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingArticles, setIsLoadingArticles] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [articleToEdit, setArticleToEdit] = useState<Article | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const categoryIdFromUrl = new URLSearchParams(location.search).get('categoryId') || undefined;
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await api.get('/categories');
-        setCategories(response.data.map((cat: any) => ({ value: cat.id, label: cat.name })));
+        const response = await getCategories();
+        setCategories(response.categories || []);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       }
@@ -43,11 +44,8 @@ const MyArticlesPage: React.FC = () => {
     setIsLoadingArticles(true);
     try {
       const filters: { authorId: string; categoryId?: string; search?: string } = { authorId: user.id };
-      if (filterCategory !== 'all') {
-        const selectedCategory = categories.find(cat => cat.value === filterCategory);
-        if (selectedCategory) {
-          filters.categoryId = selectedCategory.value;
-        }
+      if (categoryIdFromUrl) {
+        filters.categoryId = categoryIdFromUrl;
       }
       if (searchTerm) {
         filters.search = searchTerm;
@@ -59,17 +57,30 @@ const MyArticlesPage: React.FC = () => {
     } finally {
       setIsLoadingArticles(false);
     }
-  }, [user?.id, filterCategory, searchTerm, categories]);
+  }, [user?.id, categoryIdFromUrl, searchTerm, getArticles]);
 
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
 
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCategoryId = e.target.value === 'all' ? undefined : e.target.value;
+    const searchParams = new URLSearchParams(location.search);
+    if (newCategoryId) {
+      searchParams.set('categoryId', newCategoryId);
+    } else {
+      searchParams.delete('categoryId');
+    }
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  };
+
   const filteredArticles = articles.filter(article => {
-    const matchesCategory = filterCategory === 'all' || (article.category?.id === filterCategory);
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
 
   const handleEdit = useCallback((article: Article) => {
@@ -150,13 +161,12 @@ const MyArticlesPage: React.FC = () => {
                   {/* Category Filter */}
                   <div className="sm:w-48">
                     <select
-                      value={filterCategory}
-                      onChange={(e) => setFilterCategory(e.target.value)}
+                      value={categoryIdFromUrl || ''}
+                      onChange={handleCategoryChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0771BA] focus:border-transparent"
                     >
-                      <option value="all">Todas as categorias</option>
                       {categories.map((category) => (
-                        <option key={category.value} value={category.value}>{category.label}</option>
+                        <option key={category.id} value={category.id}>{category.name}</option>
                       ))}
                     </select>
                   </div>  
@@ -175,7 +185,7 @@ const MyArticlesPage: React.FC = () => {
                     </Icon>
                     <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum artigo encontrado</h3>
                     <p className="mt-1 text-sm text-gray-500">
-                      {searchTerm || filterCategory !== 'all' 
+                      {searchTerm || categoryIdFromUrl 
                         ? 'Tente ajustar os filtros de busca.' 
                         : 'Comece criando seu primeiro artigo.'
                       }

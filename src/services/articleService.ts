@@ -1,5 +1,5 @@
 import api from './api';
-import type { ArticleFormData, Article } from '../types';
+import type { ArticleFormData, Article, Category } from '../types';
 
 export const createArticle = async (articleData: ArticleFormData) => {
   const response = await api.post('/articles', articleData);
@@ -23,5 +23,10 @@ export const updateArticle = async (id: string, articleData: Partial<ArticleForm
 
 export const deleteArticle = async (id: string) => {
   const response = await api.delete(`/articles/${id}`);
+  return response.data;
+};
+
+export const getCategories = async (): Promise<{ categories: Category[] }> => {
+  const response = await api.get('/categories');
   return response.data;
 };
