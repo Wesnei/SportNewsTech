@@ -93,7 +93,7 @@ const RegisterCard: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await api.post('/auth/register', {
-        username: formData.name, 
+        username: formData.name,
         email: formData.email,
         password: formData.password,
         role: formData.role === 'Visitante' ? 'USER' :
@@ -118,8 +118,8 @@ const RegisterCard: React.FC = () => {
   const toggleConfirmPassword = useCallback(() => setShowConfirmPassword(prev => !prev), []);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-white px-6 sm:px-8 py-8 sm:py-12 font-sans">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 px-6 sm:px-8 py-8 sm:py-12 font-sans">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-[#0771BA] tracking-tight font-sans">SportNewsTech</h1>
           <p className="mt-3 text-lg font-bold text-[#0771BA] font-sans">Cadastro</p>
@@ -140,7 +140,6 @@ const RegisterCard: React.FC = () => {
               >
                 <option value="Visitante">Visitante</option>
                 <option value="Jornalista">Jornalista</option>
-                <option value="Editor">Editor</option>
               </select>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
                 <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></Icon>
@@ -250,7 +249,7 @@ const RegisterCard: React.FC = () => {
             <label htmlFor="confirmPassword" className="block text-base font-medium text-gray-700 mb-2">Confirmar Senha</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
-                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.53 0 1.039-.21 1.414-.586A2 2 0 0014 9a2 2 0 00-3.414-1.414A2 2 0 0010 9c0 .53.21 1.039.586 1.414.375.376.884.586 1.414.586zm6-3V7a4 4 0 10-8 0v1H6a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2v-7a2 2 0 00-2-2h-2z" /></Icon>
+                <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.53 0 1.039-.21 1.414-.586A2 2 0 0014 9a2 2 0 00-3.414-1.414A2 2 0 0010 9c0 .53.21 1.039.586 1.414.375.376.884.586 1.414.586zm6-3V7a4 4 0 10-8 0v1H6a2 2 0 00-2 2v7a2 2 0 002-2v-7a2 2 0 00-2-2h-2z" /></Icon>
               </span>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}

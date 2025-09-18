@@ -150,10 +150,10 @@ const ResetPassword: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-900 to-green-800 p-4 font-sans">
+    <div className="min-h-screen w-full flex items-center justify-center bg-white from-blue-900 via-gray-900 to-green-800 p-4 font-sans">
       <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-6 sm:p-10 transition-all duration-500">
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">SportNewsTech</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-blue-700 mb-2">SportNewsTech</h1>
           <p className="text-gray-600 text-lg">Redefinir Senha</p>
         </div>
 
