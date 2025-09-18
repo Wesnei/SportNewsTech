@@ -97,7 +97,8 @@ const RegisterCard: React.FC = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role === 'Visitante' ? 'USER' :
-              formData.role === 'Jornalista' ? 'JOURNALIST' : 'EDITOR',
+        formData.role === 'Jornalista' ? 'JOURNALIST' : 
+        formData.role === 'Editor' ? 'EDITOR' : 'EDITOR',
       });
 
       console.log('Cadastro bem-sucedido:', response.data);
@@ -140,6 +141,7 @@ const RegisterCard: React.FC = () => {
               >
                 <option value="Visitante">Visitante</option>
                 <option value="Jornalista">Jornalista</option>
+                <option value="Editor">Editor</option>
               </select>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
                 <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></Icon>
@@ -190,30 +192,6 @@ const RegisterCard: React.FC = () => {
             </div>
             {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
           </div>
-
-          {formData.role === 'Jornalista' && (
-            <div>
-              <label htmlFor="journalistId" className="block text-base font-medium text-gray-700 mb-2">Código:</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">
-                  <Icon className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h11" /></Icon>
-                </span>
-                <input
-                  type="text"
-                  id="journalistId"
-                  name="journalistId"
-                  value={formData.journalistId}
-                  onChange={handleChange}
-                  placeholder="Digite seu código:"
-                  className={`w-full h-12 pl-11 pr-4 border rounded-md bg-gray-100 text-gray-900 placeholder-gray-400
-                              focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400
-                              transition-all
-                              ${errors.journalistId ? 'border-red-500 focus:ring-red-300' : 'border-gray-200'}`}
-                />
-              </div>
-              {errors.journalistId && <p className="mt-2 text-sm text-red-600">{errors.journalistId}</p>}
-            </div>
-          )}
 
           <div>
             <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-2">Senha</label>

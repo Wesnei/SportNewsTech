@@ -42,11 +42,11 @@ const MyArticlesPage: React.FC = () => {
 
     setIsLoadingArticles(true);
     try {
-      const filters: { authorId: string; category?: string; search?: string } = { authorId: user.id };
+      const filters: { authorId: string; categoryId?: string; search?: string } = { authorId: user.id };
       if (filterCategory !== 'all') {
-        const selectedCategory = categories.find(cat => cat.label === filterCategory);
+        const selectedCategory = categories.find(cat => cat.value === filterCategory);
         if (selectedCategory) {
-          filters.category = selectedCategory.value;
+          filters.categoryId = selectedCategory.value;
         }
       }
       if (searchTerm) {
@@ -65,24 +65,8 @@ const MyArticlesPage: React.FC = () => {
     fetchArticles();
   }, [fetchArticles]);
 
-  const formatPublishedDate = (dateString: string | undefined) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffHours <= 24) {
-      return `Há ${diffHours} hora(s)`;
-    } else if (diffDays === 1) {
-      return 'Ontem';
-    }
-    return `${date.toLocaleDateString()}`;
-  };
-
   const filteredArticles = articles.filter(article => {
-    const matchesCategory = filterCategory === 'all' || (article.category?.name === filterCategory);
+    const matchesCategory = filterCategory === 'all' || (article.category?.id === filterCategory);
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
     return matchesCategory && matchesSearch;
@@ -111,19 +95,15 @@ const MyArticlesPage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="hidden lg:block lg:w-64 lg:fixed lg:inset-y-0 lg:z-50">
         <Sidebar isOpen={true} onClose={() => {}} />
       </div>
       
-      {/* Mobile Sidebar Overlay */}
       <div className="lg:hidden">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
       
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
-        {/* Top Navigation */}
         <header className="bg-[#0771BA] shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -143,7 +123,6 @@ const MyArticlesPage: React.FC = () => {
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50">
           <div className="px-4 sm:px-6 lg:px-8 py-8">
             <div className="max-w-6xl mx-auto">
@@ -177,14 +156,13 @@ const MyArticlesPage: React.FC = () => {
                     >
                       <option value="all">Todas as categorias</option>
                       {categories.map((category) => (
-                        <option key={category.value} value={category.label}>{category.label}</option>
+                        <option key={category.value} value={category.value}>{category.label}</option>
                       ))}
                     </select>
-                  </div>
+                  </div>  
                 </div>
               </div>
 
-              {/* Articles Grid */}
               <div className="space-y-6">
                 {isLoadingArticles ? (
                   <div className="text-center py-12 text-gray-500">
@@ -207,7 +185,7 @@ const MyArticlesPage: React.FC = () => {
                   filteredArticles.map((article) => (
                     <div key={article.id} className="bg-white rounded-lg overflow-hidden">
                       <div className="flex flex-col sm:flex-row gap-4">
-                        {/* Article Image */}
+                       
                         <div className="sm:w-80 h-48 sm:h-48">
                           <img
                             src={article.coverImage || 'placeholder-image.jpg'}
@@ -216,13 +194,12 @@ const MyArticlesPage: React.FC = () => {
                           />
                         </div>
 
-                        {/* Article Content */}
+                        
                         <div className="flex-1 p-6">
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                               {article.category?.name || 'N/A'}
                             </span>
-                            <span className="text-sm text-gray-500">{formatPublishedDate(article.publishedAt)}</span>
                           </div>
 
                           <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
@@ -233,7 +210,6 @@ const MyArticlesPage: React.FC = () => {
                             {article.subtitle}
                           </p>
 
-                          {/* Actions */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <button

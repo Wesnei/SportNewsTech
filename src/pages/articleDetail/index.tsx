@@ -45,11 +45,6 @@ const ArticleDetailPage: React.FC = () => {
     fetchArticle();
   }, [fetchArticle]);
 
-  const formatPublishedDate = (dateString: string | undefined) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
 
   if (isLoading) {
     return (
@@ -98,17 +93,14 @@ const ArticleDetailPage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="hidden lg:block lg:w-64 lg:fixed lg:inset-y-0 lg:z-50">
         <Sidebar isOpen={true} onClose={() => {}} />
       </div>
       
-      {/* Mobile Sidebar Overlay */}
       <div className="lg:hidden">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
       
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
         {/* Top Navigation */}
         <header className="bg-[#0771BA] shadow-sm">
@@ -129,7 +121,6 @@ const ArticleDetailPage: React.FC = () => {
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <article className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -148,18 +139,12 @@ const ArticleDetailPage: React.FC = () => {
 
               <div className="flex items-center text-sm text-gray-500 mb-6 space-x-4">
                 {article.author && (
-                  <span>Por <span className="font-medium text-gray-700">@{article.author.username || article.author.name}</span></span>
+                  <span>Por <span className="font-medium text-gray-700">@{article.author.username}</span></span>
                 )}
                 {article.category && (
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     {article.category.name}
                   </span>
-                )}
-                {article.publishedAt && (
-                  <span>Publicado em {formatPublishedDate(article.publishedAt)}</span>
-                )}
-                {article.viewsCount !== undefined && (
-                  <span>{article.viewsCount} visualizações</span>
                 )}
               </div>
 

@@ -10,7 +10,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div>Carregando autenticação...</div>; 
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
+        <div className="flex items-center space-x-2 text-gray-600">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"></div>
+        </div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
