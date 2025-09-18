@@ -71,10 +71,7 @@ const Header = () => {
       {
         acceptNode: (node) => {
           const parent = node.parentElement;
-<<<<<<< HEAD
-=======
           
->>>>>>> 08bec80675c4da8ba5d642eea8e9afd29801bc37
           if (!parent || 
               parent.closest('input') || 
               parent.closest('textarea') || 
