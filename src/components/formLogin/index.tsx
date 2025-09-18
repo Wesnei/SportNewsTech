@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 type Role = 'Visitante' | 'Jornalista' | 'Editor';
 
@@ -7,7 +8,6 @@ interface LoginFormData {
   email: string;
   password: string;
   role: Role;
-  journalistId?: string;
 }
 
 interface IconProps {
@@ -15,17 +15,20 @@ interface IconProps {
   className?: string;
 }
 
-const useFormValidation = (rules: any) => {
+const useFormValidation = (rules: Record<string, { custom: (value: string) => string | undefined }>) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   
-  const validateForm = (formData: Record<string, string>): boolean => {
+  const validateForm = (formData: LoginFormData): boolean => {
     const newErrors: Record<string, string> = {};
     for (const key in rules) {
       const rule = rules[key];
-      const value = formData[key];
-      const error = rule.custom(value);
-      if (error) {
-        newErrors[key] = error;
+      const value = formData[key as keyof LoginFormData];
+      
+      if (typeof value === 'string') {
+        const error = rule.custom(value);
+        if (error) {
+          newErrors[key] = error;
+        }
       }
     }
     setErrors(newErrors);
@@ -77,7 +80,7 @@ const Notification: React.FC<{ message: string; type: 'success' | 'error' }> = (
 const LoginCard: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({ 
-    email: '', password: '', role: 'Jornalista', journalistId: '' 
+    email: '', password: '', role: 'Jornalista'
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -86,8 +89,7 @@ const LoginCard: React.FC = () => {
 
   const validationRules = {
     email: { custom: (v: string) => !v.trim() ? 'O campo de email é obrigatório.' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Por favor, insira um email válido.' : undefined },
-    password: { custom: (v: string) => !v.trim() ? 'O campo de senha é obrigatório.' : v.length < 6 ? 'A senha deve ter no mínimo 6 caracteres.' : undefined },
-    journalistId: { custom: (v: string) => formData.role === 'Jornalista' && !v.trim() ? 'O código de jornalista é obrigatório.' : undefined }
+    password: { custom: (v: string) => !v.trim() ? 'O campo de senha é obrigatório.' : v.length < 6 ? 'A senha deve ter no mínimo 6 caracteres.' : undefined }
   };
   
   const { errors, validateForm, clearError } = useFormValidation(validationRules);
@@ -99,29 +101,37 @@ const LoginCard: React.FC = () => {
     if (notification) setNotification(null);
   }, [clearError, notification]);
 
-  const mockAuthService = {
-    login: async (email: string, password: string) => {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      if (email.toLowerCase() === "user@example.com" && password === "password123") {
-        return { id: "mockUserId", email, role: formData.role };
-      }
-      throw new Error("Email ou senha inválidos. Por favor, tente novamente.");
-    }
-  };
-  
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setNotification(null);
-    if (!validateForm({ ...formData, journalistId: formData.journalistId ?? '' })) return;
-    
+
+    if (!validateForm(formData)) return;
+
     setIsLoading(true);
     try {
-      const user = await mockAuthService.login(formData.email, formData.password);
-      localStorage.setItem('currentUserId', user.id);
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      console.log('Enviando requisição para:', api.getUri() + '/auth/login', 'com payload:', payload);
+      const response = await api.post('/auth/login', payload);
+      console.log('Resposta da API:', response.data);
+
+      const { user: { id }, token } = response.data;
+
+      localStorage.setItem('currentUserId', id);
+      localStorage.setItem('authToken', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
       setNotification({ message: 'Login bem-sucedido! Redirecionando...', type: 'success' });
-      setTimeout(() => navigate('/dashboard'), 1200);
+      setTimeout(() => navigate('/home'), 1200);
     } catch (error: any) {
-      setNotification({ message: error.message || 'Ocorreu um erro inesperado.', type: 'error' });
+      console.error('Erro completo:', error);
+      console.error('Resposta do servidor:', error.response?.data);
+      console.error('Status HTTP:', error.response?.status);
+      const errorMessage = error.response?.data?.message || 'Erro ao conectar com o servidor. Verifique a conexão ou tente novamente.';
+      setNotification({ message: errorMessage, type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -171,19 +181,6 @@ const LoginCard: React.FC = () => {
             <AnimatedError message={errors.password} id="password-error" />
           </div>
 
-          <div className="transition-all duration-500 ease-in-out overflow-hidden" style={{ maxHeight: formData.role === 'Jornalista' ? '100px' : '0' }}>
-            {formData.role === 'Jornalista' && (
-              <div className="pt-1">
-                <label htmlFor="journalistId" className="block text-sm font-medium text-slate-700 mb-2">Código de Jornalista</label>
-                <div className="relative">
-                   <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 pointer-events-none"><Icon><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></Icon></span>
-                  <input type="number" id="journalistId" name="journalistId" value={formData.journalistId} onChange={handleChange} placeholder="Insira seu código" min="1" max="100" aria-invalid={!!errors.journalistId} aria-describedby="journalistId-error" className={`w-full h-12 pl-12 pr-4 border rounded-lg bg-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${errors.journalistId ? 'border-red-500 ring-red-300' : 'border-slate-300 focus:ring-blue-500'}`} />
-                </div>
-                <AnimatedError message={errors.journalistId} id="journalistId-error" />
-              </div>
-            )}
-          </div>
-          
           <div className="text-right -mt-2">
             <Link to="/recovery-password" className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">Esqueceu sua senha?</Link>
           </div>
@@ -204,4 +201,3 @@ const LoginCard: React.FC = () => {
 };
 
 export default LoginCard;
-
