@@ -1,6 +1,11 @@
-import React, { useState, useCallback } from 'react';
-import type { IconProps } from '../../../types';
+import React, { useState, useCallback, useEffect } from 'react';
+import type { IconProps, Article} from '../../../types';
 import Sidebar from '../../../components/sidebar';
+import { getArticles, deleteArticle } from '../../../services/articleService';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../services/api';
+import { useNavigate } from 'react-router-dom';
+import EditArticleModal from '../../../components/editArticleModal';
 
 const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -8,112 +13,97 @@ const Icon: React.FC<IconProps> = ({ children, className = "h-5 w-5" }) => (
   </svg>
 );
 
-interface Article {
-  id: string;
-  title: string;
-  subtitle: string;
-  coverImage: string;
-  category: string;
-  publishedAt: string;
-  status: 'published' | 'draft';
-  views: number;
-  likes: number;
-}
-
 const MyArticlesPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [articleToEdit, setArticleToEdit] = useState<Article | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  // Mock data - em produção viria da API
-  const [articles] = useState<Article[]>([
-    {
-      id: '1',
-      title: 'Guto Miguel avança às semifinais do US Open juvenil',
-      subtitle: 'Tenista goiano garante melhor desempenho da carreira no Grand Slam americano; próximo confronto será nesta sexta-feira',
-      coverImage: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=250&fit=crop',
-      category: 'Tênis',
-      publishedAt: 'Há 20 horas',
-      status: 'published',
-      views: 1250,
-      likes: 89
-    },
-    {
-      id: '2',
-      title: 'N° 5 do mundo fica surpresa após interação bizarra com fã no US Open',
-      subtitle: 'Mirra Andreeva, de 18 anos, foi abordada por um homem quando estava sentada no banco ao lado da parceira Diana Shnaider durante intervalo da partida',
-      coverImage: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop',
-      category: 'Tênis',
-      publishedAt: 'Ontem',
-      status: 'published',
-      views: 2100,
-      likes: 156
-    },
-    {
-      id: '3',
-      title: 'Alcaraz precisa de feito inédito contra Djokovic para chegar à final',
-      subtitle: 'Espanhol vai disputar semifinal contra o sérvio, que soma exatamente 100 títulos em sua trajetória',
-      coverImage: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=250&fit=crop',
-      category: 'Tênis',
-      publishedAt: 'Ontem',
-      status: 'published',
-      views: 3200,
-      likes: 234
-    },
-    {
-      id: '4',
-      title: 'Santos recebe torneio de tênis nesta semana',
-      subtitle: '1ª edição da Business Cup é disputada na sede da Santos Tennis Academy.',
-      coverImage: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop',
-      category: 'Tênis',
-      publishedAt: 'Há 4 horas',
-      status: 'published',
-      views: 890,
-      likes: 67
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/categories');
+        setCategories(response.data.map((cat: any) => ({ value: cat.id, label: cat.name })));
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const fetchArticles = useCallback(async () => {
+    if (!user?.id) return;
+
+    setIsLoadingArticles(true);
+    try {
+      const filters: { authorId: string; categoryId?: string; search?: string } = { authorId: user.id };
+      if (filterCategory !== 'all') {
+        const selectedCategory = categories.find(cat => cat.value === filterCategory);
+        if (selectedCategory) {
+          filters.categoryId = selectedCategory.value;
+        }
+      }
+      if (searchTerm) {
+        filters.search = searchTerm;
+      }
+      const { articles: fetchedArticles } = await getArticles(filters);
+      setArticles(fetchedArticles);
+    } catch (error) {
+      console.error('Erro ao buscar artigos:', error);
+    } finally {
+      setIsLoadingArticles(false);
     }
-  ]);
+  }, [user?.id, filterCategory, searchTerm, categories]);
 
-  const categories = ['all', 'Futebol', 'Basquete', 'Tênis', 'Natação', 'Atletismo', 'Outros'];
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
 
   const filteredArticles = articles.filter(article => {
-    const matchesCategory = filterCategory === 'all' || article.category === filterCategory;
+    const matchesCategory = filterCategory === 'all' || (article.category?.id === filterCategory);
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         article.subtitle.toLowerCase().includes(searchTerm.toLowerCase());
+                         (article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
     return matchesCategory && matchesSearch;
   });
 
-  const handleEdit = useCallback((articleId: string) => {
-    console.log('Editar artigo:', articleId);
-    // Implementar navegação para edição
+  const handleEdit = useCallback((article: Article) => {
+    setArticleToEdit(article);
+    setIsEditModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback((articleId: string) => {
+  const handleDelete = useCallback(async (articleId: string) => {
     if (window.confirm('Tem certeza que deseja excluir este artigo?')) {
-      console.log('Excluir artigo:', articleId);
-      // Implementar exclusão
+      try {
+        await deleteArticle(articleId);
+        console.log('Artigo excluído com sucesso:', articleId);
+        fetchArticles();
+      } catch (error) {
+        console.error('Erro ao excluir artigo:', error);
+      }
     }
-  }, []);
+  }, [fetchArticles]);
 
-  const handleView = useCallback((articleId: string) => {
-    console.log('Visualizar artigo:', articleId);
-    // Implementar visualização
-  }, []);
+  const handleView = useCallback((articleSlug: string) => {
+    navigate(`/articles/detail/${articleSlug}`);
+  }, [navigate]);
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="hidden lg:block lg:w-64 lg:fixed lg:inset-y-0 lg:z-50">
         <Sidebar isOpen={true} onClose={() => {}} />
       </div>
       
-      {/* Mobile Sidebar Overlay */}
       <div className="lg:hidden">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
       
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
-        {/* Top Navigation */}
         <header className="bg-[#0771BA] shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -128,18 +118,11 @@ const MyArticlesPage: React.FC = () => {
                 </button>
                 <h1 className="ml-2 lg:ml-0 text-xl font-semibold text-white">Meus Artigos</h1>
               </div>
-              <div className="flex items-center space-x-4">
-                <button className="p-2 text-blue-100 hover:text-white hover:bg-blue-600 rounded-md transition-colors">
-                  <Icon className="h-5 w-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </Icon>
-                </button>
-              </div>
+              
             </div>
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50">
           <div className="px-4 sm:px-6 lg:px-8 py-8">
             <div className="max-w-6xl mx-auto">
@@ -172,17 +155,20 @@ const MyArticlesPage: React.FC = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0771BA] focus:border-transparent"
                     >
                       <option value="all">Todas as categorias</option>
-                      {categories.slice(1).map((category) => (
-                        <option key={category} value={category}>{category}</option>
+                      {categories.map((category) => (
+                        <option key={category.value} value={category.value}>{category.label}</option>
                       ))}
                     </select>
-                  </div>
+                  </div>  
                 </div>
               </div>
 
-              {/* Articles Grid */}
               <div className="space-y-6">
-                {filteredArticles.length === 0 ? (
+                {isLoadingArticles ? (
+                  <div className="text-center py-12 text-gray-500">
+                    Carregando artigos...
+                  </div>
+                ) : filteredArticles.length === 0 ? (
                   <div className="text-center py-12">
                     <Icon className="mx-auto h-12 w-12 text-gray-400">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -199,22 +185,21 @@ const MyArticlesPage: React.FC = () => {
                   filteredArticles.map((article) => (
                     <div key={article.id} className="bg-white rounded-lg overflow-hidden">
                       <div className="flex flex-col sm:flex-row gap-4">
-                        {/* Article Image */}
+                       
                         <div className="sm:w-80 h-48 sm:h-48">
                           <img
-                            src={article.coverImage}
+                            src={article.coverImage || 'placeholder-image.jpg'}
                             alt={article.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
                         </div>
 
-                        {/* Article Content */}
+                        
                         <div className="flex-1 p-6">
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              {article.category}
+                              {article.category?.name || 'N/A'}
                             </span>
-                            <span className="text-sm text-gray-500">{article.publishedAt}</span>
                           </div>
 
                           <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
@@ -225,11 +210,10 @@ const MyArticlesPage: React.FC = () => {
                             {article.subtitle}
                           </p>
 
-                          {/* Actions */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <button
-                                onClick={() => handleView(article.id)}
+                                onClick={() => handleView(article.slug)}
                                 className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#0771BA] focus:ring-offset-2"
                               >
                                 <Icon className="h-4 w-4 mr-1">
@@ -240,7 +224,7 @@ const MyArticlesPage: React.FC = () => {
                               </button>
                               
                               <button
-                                onClick={() => handleEdit(article.id)}
+                                onClick={() => handleEdit(article)}
                                 className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#0771BA] focus:ring-offset-2"
                               >
                                 <Icon className="h-4 w-4 mr-1">
@@ -271,6 +255,14 @@ const MyArticlesPage: React.FC = () => {
           </div>
         </main>
       </div>
+      {articleToEdit && (
+        <EditArticleModal
+          articleToEdit={articleToEdit}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onArticleUpdated={fetchArticles}
+        />
+      )}
     </div>
   );
 };

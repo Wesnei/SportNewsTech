@@ -2,12 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 
-type Role = 'Visitante' | 'Jornalista' | 'Editor';
 
 interface LoginFormData {
   email: string;
   password: string;
-  role: Role;
 }
 
 interface IconProps {
@@ -80,7 +78,7 @@ const Notification: React.FC<{ message: string; type: 'success' | 'error' }> = (
 const LoginCard: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({ 
-    email: '', password: '', role: 'Jornalista'
+    email: '', password: ''
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -148,18 +146,7 @@ const LoginCard: React.FC = () => {
         <Notification message={notification?.message ?? ''} type={notification?.type ?? 'error'} />
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-2">Tipo de usuário</label>
-            <div className="relative">
-              <select id="role" name="role" value={formData.role} onChange={handleChange} className="w-full h-12 pl-4 pr-12 border rounded-lg bg-slate-50 text-slate-900 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all border-slate-300 cursor-pointer">
-                <option value="Jornalista">Jornalista</option>
-                <option value="Editor">Editor</option>
-                <option value="Visitante">Visitante</option>
-              </select>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-500"><Icon><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></Icon></span>
-            </div>
-          </div>
-          
+                    
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">Email</label>
             <div className="relative">

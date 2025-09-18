@@ -1,30 +1,37 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Login from "../pages/login";
-import Register from "../pages/register";
-import RecoveryCard from "../pages/recovery-password";
-import NotFound from "../pages/notFoundPage";
-import HomePage from "../pages/home/index";
-import JournalistPage from "../pages/journalist";
-import MyArticlesPage from "../pages/journalist/articles";
-import ResetCard from "../pages/reset-password";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import HomePage from '../pages/home';
+import LoginPage from '../pages/login';
+import RegisterPage from '../pages/register';
+import JournalistPage from '../pages/journalist';
+import MyArticlesPage from '../pages/journalist/articles';
+import PrivateRoute from './PrivateRoute';
+import ArticleDetailPage from '../pages/articleDetail';
+import RecoveryCard from '../pages/recovery-password';
+import ResetCard from '../pages/reset-password';
 
 const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* Rotas públicas */}
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/recovery-password" element={<RecoveryCard />} />
-      <Route path="/reset-password" element={<ResetCard />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/journalist" element={<JournalistPage />} />
-      <Route path="/journalist/articles" element={<MyArticlesPage />} />
+    
+      <Routes>
+        {/* Rotas Públicas*/}
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/articles/detail/:slug" element={<ArticleDetailPage />} />
+        <Route path="/recovery-password" element={<RecoveryCard />} />
+        <Route path="/recovery-password" element={<ResetCard />} />
 
-      
-      {/* Rota 404 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Rotas Protegidas (Jornalista/Editor) */}
+        <Route element={<PrivateRoute allowedRoles={['JOURNALIST', 'EDITOR']} />}>
+          <Route path="/journalist" element={<JournalistPage />} />
+          <Route path="/journalist/articles" element={<MyArticlesPage />} />
+        </Route>
+
+        {/* Rota 404 */}
+        <Route path="*" element={<h1>404: Not Found</h1>} />
+      </Routes>
+    
   );
 };
 

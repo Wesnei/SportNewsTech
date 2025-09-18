@@ -6,6 +6,7 @@ export interface User {
   role: UserRole;
   journalistId?: string;
   name: string;
+  username?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,20 +38,23 @@ export interface FormErrors {
   form?: string;
 }
 
-export interface NewsArticle {
+export interface Article {
   id: string;
   title: string;
+  slug: string;
+  subtitle?: string;
   content: string;
-  author: string;
+  coverImage?: string;
+  status: string; 
+  publishedAt?: string; 
   authorId: string;
-  category: NewsCategory;
-  tags: string[];
-  publishedAt: Date;
-  updatedAt: Date;
-  isPublished: boolean;
-  imageUrl?: string;
-  views: number;
-  likes: number;
+  categoryId: string;
+  tags: { id: string; name: string }[];
+  viewsCount: number;
+  createdAt: string;
+  updatedAt: string;
+  author?: { id: string; username: string }; 
+  category?: { id: string; name: string }; 
 }
 
 export interface ArticleFormData {
@@ -60,6 +64,7 @@ export interface ArticleFormData {
   coverImage: string;
   categoryId: string;
   tags: string[];
+  authorId?: string;
 }
 
 export interface ArticleFormErrors {
@@ -70,6 +75,11 @@ export interface ArticleFormErrors {
   categoryId?: string;
   tags?: string;
   form?: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
 }
 
 export type NewsCategory = 'futebol' | 'basquete' | 'tenis' | 'natacao' | 'atletismo' | 'outros';
@@ -95,7 +105,6 @@ export interface ValidationRules {
   [key: string]: ValidationRule;
 }
 
-// Tipos para componentes
 export interface IconProps {
   children: React.ReactNode;
   className?: string;
